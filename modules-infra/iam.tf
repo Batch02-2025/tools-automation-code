@@ -26,6 +26,7 @@ resource "aws_iam_instance_profile" "instance-profile" {
 }
 
 resource "aws_iam_policy_attachment" "policy-attach" {
+  name       = "${var.name}-policy-attach"
   count      = length(var.policy_name)
   roles      = [aws_iam_role.role.name]
   policy_arn = "arn:aws:iam::aws:policy/${var.policy_name[count.index]}"
