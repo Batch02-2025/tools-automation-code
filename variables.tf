@@ -18,3 +18,7 @@ variable "tools" {
  }
 }
 
+variable "key_name" {
+  type = string
+}
+
