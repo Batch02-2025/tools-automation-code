@@ -3,3 +3,7 @@
 #   name_regex      = "Red Hat Enterprise Linux 9 (HVM), SSD Volume Type"
 #   owners          = ["959620655822"]
 # }
+
+data "aws_key_pair" "key" {
+  key_name = "ec2-B2key"
+}
