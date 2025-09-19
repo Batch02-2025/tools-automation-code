@@ -29,6 +29,13 @@ resource "aws_security_group" "tool_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port         = -1  # -1 for all ICMP types
+    to_port           = -1  # -1 for all ICMP codes
+    protocol          = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   tags = {
     Name  = "${var.name}-sg"
   }
