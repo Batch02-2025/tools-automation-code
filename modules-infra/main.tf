@@ -6,10 +6,6 @@ resource "aws_instance" "tool" {
   iam_instance_profile    = aws_iam_instance_profile.instance-profile.name
   key_name                = data.aws_key_pair.key.key_name
 
-  user_data = <<-EOF
-    #!/bin/bash
-    sudo hostnamectl set-hostname ${var.name} --static
-    EOF
   tags = {
     Name = "${var.name}"
   }

@@ -3,6 +3,10 @@
 # sudo dnf install gh -y
 # gh auth login -s admin:org
 
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: github-runner
+
 - name: Add github Runner User
   ansible.builtin.user:
     name: grunner

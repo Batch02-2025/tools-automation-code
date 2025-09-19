@@ -1,5 +1,9 @@
 # Configure using Ansible the Hashicorp Vault Server
 
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: vault
+
 - name: Yum Utils install
   ansible.builtin.shell: sudo yum install -y yum-utils
 
