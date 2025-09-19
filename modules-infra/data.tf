@@ -5,5 +5,5 @@
 # }
 
 data "aws_key_pair" "key" {
-  key_name = "ec2-B2key"
+  key_name = var.key_name
 }

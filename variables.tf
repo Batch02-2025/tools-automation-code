@@ -20,5 +20,6 @@ variable "tools" {
 
 variable "key_name" {
   type = string
+  default = "ec2-B2key"
 }
 
