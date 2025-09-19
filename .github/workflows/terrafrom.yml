@@ -1,5 +1,5 @@
 name: Provision tool INfra
-on: [worklfow_dispatch]
+on: [workflow_dispatch]
 jobs:
   Provision:
     runs_on: self-hosted
