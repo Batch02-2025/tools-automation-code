@@ -1,0 +1,28 @@
+# Configure using Ansible the Hashicorp Vault Server
+
+- name: Yum Utils install
+  ansible.builtin.shell: sudo yum install -y yum-utils
+
+- name: Copy Repo file
+  ansible.builtin.copy:
+    src: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+    dest: /etc/yum.repos.d/hashicorp.repo
+    mode: '0644'
+
+- name: Install Vault
+  ansible.builtin.yum:
+    name: vault
+    state: present
+    become: true
+
+- name: Copy Vault Config file
+  ansible.builtin.copy:
+    src: vault.hcl
+    dest: /etc/vault.d/vault.hcl
+    mode: '0644'
+
+- name: Start Vault service
+  ansible.builtin.service:
+    name: vault
+    state: started
+    enabled: true
