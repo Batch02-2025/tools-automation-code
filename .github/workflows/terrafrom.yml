@@ -1,0 +1,11 @@
+name: Provision tool INfra
+on: [worklfow_dispatch]
+jobs:
+  Provision:
+    runs_on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Apply
+        run: terraform apply -auto-approve

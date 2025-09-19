@@ -1,0 +1,62 @@
+# Following steps need to be run manually
+# sudo curl -L -o /etc/yum.repos.d/gh-cli.repo https://cli.github.com/packages/rpm/gh-cli.repo
+# sudo dnf install gh -y
+# gh auth login -s admin:org
+
+- name: Add github Runner User
+  ansible.builtin.user:
+    name: grunner
+
+- name: Create a Directory
+  ansible.builtin.file:
+    path: /actions-runner
+    state: directory
+    owner: grunner
+    group: grunner
+
+- name: Extract the downloaded Github-runner
+  ansible.builtin.unarchive:
+    src: https://github.com/actions/runner/releases/download/v2.328.0/actions-runner-linux-x64-2.328.0.tar.gz
+    dest: "/action-runner"
+    remote_src: yes
+    owner: grunner
+    group: grunner
+
+- name: Configure the Github Runner
+  ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG
+  args:
+    chdir: /action-runner
+    become_user: grunner
+
+- name: Update the path
+  ansible.builtin.copy:
+    src: path
+    dest: /action-runner/.path
+    become_user: grunner
+
+- name: Install Github Service
+  ansible.builtin.shell: ./svc.sh install grunner; ./svc.sh start
+  args:
+    chdir: /action-runner
+    become_user: grunner
+
+- name: Yum Utils Install
+  ansible.builtin.shell: sudo yum install -y yum-utils
+  args:
+    chdir: /action-runner
+    become_user: grunner
+
+- name: Copy the Terraform Repo File
+  ansible.builtin.shell: sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+  args:
+    chdir: /action-runner
+    become_user: grunner
+
+- name: Install Terraform
+  ansible.builtin.yum:
+    name: terraform
+    state: present
+
+- name: Ansible Install
+  ansible.builtin.shell: sudo pip install ansible
+

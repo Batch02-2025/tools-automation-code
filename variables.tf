@@ -7,7 +7,7 @@ variable "tools" {
       ports         = {}
       volume_size   = 30
     }
-     vault = {
+    vault = {
       instance_type = "t2.small"
       policy_name = []
       ports         = {
