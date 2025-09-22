@@ -18,10 +18,10 @@
     owner: grunner
     group: grunner
 
-- name: Extract the downloaded Github-runner
+- name: Extract and download Github-runner
   ansible.builtin.unarchive:
     src: https://github.com/actions/runner/releases/download/v2.328.0/actions-runner-linux-x64-2.328.0.tar.gz
-    dest: "/action-runner"
+    dest: "/actions-runner"
     remote_src: yes
     owner: grunner
     group: grunner
@@ -29,31 +29,31 @@
 - name: Configure the Github Runner
   ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG
   args:
-    chdir: /action-runner
+    chdir: /actions-runner
     become_user: grunner
 
 - name: Update the path
   ansible.builtin.copy:
     src: path
-    dest: /action-runner/.path
+    dest: /actions-runner/.path
     become_user: grunner
 
 - name: Install Github Service
   ansible.builtin.shell: ./svc.sh install grunner; ./svc.sh start
   args:
-    chdir: /action-runner
+    chdir: /actions-runner
     become_user: grunner
 
 - name: Yum Utils Install
   ansible.builtin.shell: sudo yum install -y yum-utils
   args:
-    chdir: /action-runner
+    chdir: /actions-runner
     become_user: grunner
 
 - name: Copy the Terraform Repo File
   ansible.builtin.shell: sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
   args:
-    chdir: /action-runner
+    chdir: /actions-runner
     become_user: grunner
 
 - name: Install Terraform
