@@ -63,6 +63,6 @@
 
 - name: Ansible Install
   ansible.builtin.shell: sudo dnf install python3.11-pip
-  ansible. bultin.shell: sudo pip-3.11 install ansible
+  ansible.builtin.shell: sudo pip-3.11 install ansible
 
 
