@@ -6,6 +6,11 @@ resource "aws_instance" "tool" {
   iam_instance_profile    = aws_iam_instance_profile.instance-profile.name
   key_name                = data.aws_key_pair.key.key_name
 
+  user_data = <<-EOF
+    #!/bin/bash
+    echo "Hello World" > /var/www/html/index.html
+  EOF
+
   tags = {
     Name = "${var.name}"
   }

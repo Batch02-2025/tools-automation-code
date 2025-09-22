@@ -62,5 +62,5 @@
     state: present
 
 - name: Ansible Install
-  ansible.builtin.shell: sudo pip install ansible
+  ansible.builtin.shell: sudo dnf install python3.11-pip
 
