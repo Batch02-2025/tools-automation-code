@@ -11,7 +11,7 @@ resource "aws_iam_role" "role" {
         Principal = {
           Service = "ec2.amazonaws.com"
         }
-      },
+      }
     ]
   })
 
