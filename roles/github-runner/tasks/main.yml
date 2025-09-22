@@ -30,6 +30,7 @@
   ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG --runnergroup Default --name ec2 --labels rhel --work _work --replace
   args:
     chdir: /actions-runner
+  become: true
   become_user: github
 
 - name: Update the path
