@@ -1,11 +1,4 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "5.99.1"
-    }
-  }
-}
+
 resource "aws_instance" "tool" {
   ami                     = data.aws_ami.rhel9.image_id
   # ami                     = "ami-07378eee6a8e82f97"
