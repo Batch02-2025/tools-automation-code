@@ -1,10 +1,10 @@
 data "aws_ami" "rhel9" {
   most_recent = true
-  owners      = ["959620655822"]
+  owners      = ["309956199498"] # Red Hat official AWS account ID
 
   filter {
     name   = "name"
-    values = ["Red Hat Enterprise Linux 9 (HVM), SSD Volume Type*"]
+    values = ["RHEL-9*"]   # broader match to catch variations
   }
 
   filter {
