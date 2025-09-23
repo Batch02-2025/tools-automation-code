@@ -23,7 +23,9 @@ data "aws_ami" "rhel9" {
   }
 }
 
-
+data "aws_vpc" "vpc" {
+  default = true
+}
 data "aws_key_pair" "key" {
   key_name = var.key_name
 }

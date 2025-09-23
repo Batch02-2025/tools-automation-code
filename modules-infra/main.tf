@@ -41,6 +41,7 @@ resource "aws_instance" "tool" {
 resource "aws_security_group" "tool_sg" {
   name        = "${var.name}-sg"
   description = "${var.name}-sg"
+  vpc_id      = data.aws_vpc.vpc.id
 
   tags = {
     Name = "${var.name}-sg"
