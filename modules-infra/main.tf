@@ -51,7 +51,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
   ip_protocol = "tcp"
   from_port   = 22
   to_port     = 22
-  cidr_blocks = "0.0.0.0/0"
+  cidr_ipv4 = "0.0.0.0/0"
   security_group_id = aws_security_group.tool_sg.id
   description = "Allow SSH inbound traffic"
 }
@@ -60,7 +60,7 @@ resource "aws_vpc_security_group_ingress_rule" "icmp" {
   ip_protocol = "icmp"
   from_port   = -1
   to_port     = -1
-  cidr_blocks = "0.0.0.0/0"
+  cidr_ipv4 = "0.0.0.0/0"
   security_group_id = aws_security_group.tool_sg.id
   description = "Allow ICMP inbound traffic"
 }
@@ -70,7 +70,7 @@ resource "aws_vpc_security_group_ingress_rule" "app_port" {
   ip_protocol = "tcp"
   from_port   = each.value
   to_port     = each.value
-  cidr_blocks = "0.0.0.0/0"
+  cidr_ipv4 = "0.0.0.0/0"
   security_group_id = aws_security_group.tool_sg.id
   description = "Allow ${var.name} port ${var.ports[var.name]}"
 }
