@@ -5,6 +5,6 @@ module "create-tool-infra" {
   instance_type   = each.value["instance_type"]
   policy_name     = each.value["policy_name"]
   key_name        = var.key_name
-  # ports           = each.value["ports"]
-  # volume_size     = each.value["volume_size"]
+  ports           = each.value["ports"]
+  #volume_size     = each.value["volume_size"]
 }
