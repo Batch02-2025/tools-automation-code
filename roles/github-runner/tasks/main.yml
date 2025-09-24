@@ -26,23 +26,23 @@
     owner: grunner
     group: grunner
 
-# - name: Configure the Github Runner
-#   ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG --runnergroup Default --name ec2 --labels rhel --work _work --replace
-#   args:
-#     chdir: /actions-runner
-#   become: true
-#   become_user: github
+- name: Configure the Github Runner
+  ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG --runnergroup Default --name ec2 --labels rhel --work _work --replace
+  args:
+    chdir: /actions-runner
+  become: true
+  become_user: grunner
 #   become_method: sudo
 #   become_flags: '-H'
 
-- name: Configure the Github Runner (run config.sh via su)
-  ansible.builtin.shell: |
-    su -s /bin/bash github -c 'cd /actions-runner && ./config.sh --url "https://github.com/Batch02-2025/tools-automation-code" \
-      --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG --runnergroup Default --name ec2 \
-      --labels rhel --work _work --replace'
-  args:
-    executable: /bin/bash
-  become: true
+# - name: Configure the Github Runner (run config.sh via su)
+#   ansible.builtin.shell: |
+#     su -s /bin/bash github -c 'cd /actions-runner && ./config.sh --url "https://github.com/Batch02-2025/tools-automation-code" \
+#       --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG --runnergroup Default --name ec2 \
+#       --labels rhel --work _work --replace'
+#   args:
+#     executable: /bin/bash
+#   become: true
 
 
 - name: Update the path
