@@ -110,7 +110,6 @@
   become: true
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
-
 - name: Download the Terraform Repo File
   ansible.builtin.get_url:
     url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
