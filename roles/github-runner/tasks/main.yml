@@ -26,6 +26,12 @@
     owner: grunner
     group: grunner
 
+- name: Grab a Token
+  ansible.builtin.shell: |
+    gh api --method POST -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" orgs/Batch02-2025/actions/runners/registration-token | jq .token
+  register: token
+  become_user: ec2-user # fetch this token using ec2-user as its used for gh to login to github.
+
 - name: Install GitHub runner dependencies
   ansible.builtin.dnf:
     name:
@@ -37,9 +43,15 @@
       - glibc
     state: present
 
+- name: git the runner count
+  ansible.builtin.shell:
+#     cmd: gh api --method GET -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" orgs/Batch02-2025/actions/runners | jq '.runners | length'
+    gh api orgs/Batch02-2025/actions/runners --jq '.total_count'
+  register: runner_count
+  become_user: ec2-user
 
 - name: Configure the Github Runner
-  ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJLDPCCGFIZVAXPOIUDI2PMHG --runnergroup Default --name myrunner --labels rhel --work _work --replace
+  ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token {{ token.stdout }} --runnergroup Default --name myrunner --labels rhel --work _work --replace
   args:
     chdir: /actions-runner
   become: true
