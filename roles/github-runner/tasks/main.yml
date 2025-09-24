@@ -26,12 +26,25 @@
     owner: grunner
     group: grunner
 
+- name: Install GitHub runner dependencies
+  ansible.builtin.dnf:
+    name:
+      - libicu
+      - curl
+      - tar
+      - xz
+      - zlib
+      - glibc
+    state: present
+
+
 - name: Configure the Github Runner
-  ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG --runnergroup Default --name ec2 --labels rhel --work _work --replace
+  ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG --runnergroup Default --name myrunner --labels rhel --work _work --replace
   args:
     chdir: /actions-runner
   become: true
   become_user: grunner
+
 #   become_method: sudo
 #   become_flags: '-H'
 
