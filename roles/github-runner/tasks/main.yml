@@ -39,7 +39,7 @@
 
 
 - name: Configure the Github Runner
-  ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJNJHMEUAKIMVNLMJADIZU6RG --runnergroup Default --name myrunner --labels rhel --work _work --replace
+  ansible.builtin.shell: ./config.sh --url https://github.com/Batch02-2025/tools-automation-code --token BRQVJJLDPCCGFIZVAXPOIUDI2PMHG --runnergroup Default --name myrunner --labels rhel --work _work --replace
   args:
     chdir: /actions-runner
   become: true
