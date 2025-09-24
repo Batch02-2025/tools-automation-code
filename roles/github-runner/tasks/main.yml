@@ -62,7 +62,12 @@
   ansible.builtin.copy:
     src: path
     dest: /actions-runner/.path
-    become_user: grunner
+    owner: grunner
+    group: grunner
+    mode: '0644'
+  become: yes
+  become_user: grunner
+
 
 - name: Install Github Service
   ansible.builtin.shell: ./svc.sh install grunner; ./svc.sh start
