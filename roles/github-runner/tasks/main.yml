@@ -104,23 +104,18 @@
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
 - name: Install Github Service
-  ansible.builtin.shell: ./svc.sh install grunner; ./svc.sh start
+  ansible.builtin.shell: ./svc.sh install; ./svc.sh start
   args:
     chdir: /actions-runner
-    become_user: grunner
+  become: true
+  become_user: grunner
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
-- name: Yum Utils Install
-  ansible.builtin.shell: sudo yum install -y yum-utils
-  args:
-    chdir: /actions-runner
-    become_user: grunner
 
-- name: Copy the Terraform Repo File
-  ansible.builtin.shell: sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
-  args:
-    chdir: /actions-runner
-    become_user: grunner
+- name: Download the Terraform Repo File
+  ansible.builtin.get_url:
+    url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+    dest: /etc/yum.repos.d/hashicorp.repo
 
 - name: Install Terraform
   ansible.builtin.yum:
