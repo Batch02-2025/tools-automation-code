@@ -1,8 +1,8 @@
 ui            = true
 disable_mlock = true
 
-storage "vfile" {
-  path = "~/vault-storage"
+storage "file" {
+  path = "/opt/vault/data"
 }
 
 listener "tcp" {
