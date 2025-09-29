@@ -13,10 +13,10 @@
     dest: /etc/yum.repos.d/hashicorp.repo
 
 - name: Install Vault
+  become: true
   ansible.builtin.yum:
     name: vault
     state: present
-    become: true
 
 - name: Copy Vault Config file
   ansible.builtin.copy:
