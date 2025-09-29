@@ -22,7 +22,10 @@
   ansible.builtin.file:
     path: /opt/vault/data
     state: directory
-    mode: '0755'
+    mode: '0750'
+    owner: vault
+    group: vault
+
   
 - name: Copy Vault Config file
   ansible.builtin.copy:
