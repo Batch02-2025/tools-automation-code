@@ -30,7 +30,7 @@
 - name: Copy Vault Config file
   ansible.builtin.copy:
     src: vault.hcl
-    dest: /etc/vault.d/vault.hcl
+    dest: /etc/openbao.d/openbao.hcl
     mode: '0644'
 
 - name: Start Vault service
