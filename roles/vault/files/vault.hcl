@@ -1,5 +1,5 @@
 ui            = true
-disable_mlock = true
+#disable_mlock = true
 
 storage "file" {
   path = "/opt/vault/data"
