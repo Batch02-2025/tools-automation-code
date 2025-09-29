@@ -8,7 +8,7 @@
   ansible.builtin.shell: sudo yum install -y yum-utils
 
 - name: Copy Repo file
-  ansible.builtin.url:
+  ansible.builtin.get_url:
     url: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
     dest: /etc/yum.repos.d/hashicorp.repo
 
