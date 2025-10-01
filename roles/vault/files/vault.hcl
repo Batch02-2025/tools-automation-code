@@ -2,7 +2,7 @@
 ui = true
 
 # Disable mlock (required if not running as root or without privileges)
-disable_mlock = true
+# disable_mlock = true
 
 # Listener for external access (HTTP for testing)
 listener "tcp" {

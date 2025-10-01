@@ -18,15 +18,24 @@
     name: vault
     state: present
 
-# - name: Create a directory if it does not exist
-#   ansible.builtin.file:
-#     path: /opt/vault/data
-#     state: directory
-#     mode: '0750'
-#     owner: vault
-#     group: vault
+- name: Add Openbao User
+  ansible.builtin.user:
+    name: openbao
 
-  
+- name: Change Ownership for directory
+  ansible.builtin.file:
+    path: /var/lib/openbao
+    owner: openbao
+    group: openbao
+    state: directory
+    recurse: true
+
+- name: Set permissions for a directory
+  ansible.builtin.file:
+    path: /var/lib/openbao
+    state: directory
+    mode: '0750'
+
 - name: Copy Vault Config file
   ansible.builtin.copy:
     src: openbao.hcl
