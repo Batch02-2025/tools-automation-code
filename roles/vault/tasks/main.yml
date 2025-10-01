@@ -29,7 +29,7 @@
   
 - name: Copy Vault Config file
   ansible.builtin.copy:
-    src: vault.hcl
+    src: openbao.hcl
     dest: /etc/openbao.d/openbao.hcl
     mode: '0644'
 
