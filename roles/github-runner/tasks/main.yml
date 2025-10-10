@@ -73,16 +73,24 @@
   become_user: "{{ runner_user }}"
   when: not runner_config.stat.exists
 
-# Step 1: Install service (needs root)
+# Check if GitHub Runner service already exists
+- name: Check if GitHub Runner service file exists
+  ansible.builtin.stat:
+    path: "/etc/systemd/system/actions.runner.Batch02-2025-tools-automation-code.myrunner.service"
+  register: runner_service_file
+  become: yes
+
+# Install service (needs root)
 - name: Install GitHub Runner service (requires sudo)
   ansible.builtin.shell: |
     ./svc.sh install
   args:
     chdir: "{{ runner_dir }}"
-  become: yes  # root privileges
+  become: yes
   become_user: root
+  when: not runner_service_file.stat.exists
 
-# Step 2: Fix service file to run as 'grunner'
+# Fix service file to run as 'grunner'
 - name: Ensure GitHub Runner service runs as correct user
   ansible.builtin.replace:
     path: "/etc/systemd/system/actions.runner.*.service"
@@ -91,13 +99,13 @@
   become: yes
   ignore_errors: yes
 
-# Step 3: Reload systemd to pick up the change
+# Reload systemd to pick up the change
 - name: Reload systemd
   ansible.builtin.systemd:
     daemon_reload: yes
   become: yes
 
-# Step 4: Start the service as the runner user
+# Start the service as the runner user
 - name: Start GitHub Runner service (as runner user)
   ansible.builtin.shell: |
     ./svc.sh start
