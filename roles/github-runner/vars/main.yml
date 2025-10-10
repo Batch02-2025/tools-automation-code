@@ -1,0 +1,9 @@
+# variables for role - github runner
+org_name: "Batch02-2025"
+runner_name: "myrunner"
+runner_group: "Default"
+runner_labels: "rhel"
+runner_dir: "/actions-runner"
+runner_user: "grunner"
+repo_url: "https://github.com/Batch02-2025/tools-automation-code"
+runner_version: "2.328.0"
