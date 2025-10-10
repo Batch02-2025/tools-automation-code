@@ -73,27 +73,38 @@
   become_user: "{{ runner_user }}"
   when: not runner_config.stat.exists
 
-- name: Install and start GitHub Runner service (as grunner)
+# Step 1: Install service (needs root)
+- name: Install GitHub Runner service (requires sudo)
   ansible.builtin.shell: |
     ./svc.sh install
-    ./svc.sh start
   args:
     chdir: "{{ runner_dir }}"
-  become_user: "{{ runner_user }}"
+  become: yes  # root privileges
+  become_user: root
 
-- name: Ensure service file runs as grunner (in case svc.sh picked ec2-user)
+# Step 2: Fix service file to run as 'grunner'
+- name: Ensure GitHub Runner service runs as correct user
   ansible.builtin.replace:
-    path: "/etc/systemd/system/actions.runner.{{ org_name }}*.{{ runner_name }}.service"
+    path: "/etc/systemd/system/actions.runner.*.service"
     regexp: '^User=.*'
     replace: "User={{ runner_user }}"
   become: yes
-  ignore_errors: yes  # in case the glob doesn't match yet
+  ignore_errors: yes
 
-- name: Reload and restart runner service
-  ansible.builtin.shell: |
-    systemctl daemon-reload
-    systemctl restart "actions.runner.{{ org_name }}*.{{ runner_name }}.service"
+# Step 3: Reload systemd to pick up the change
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: yes
   become: yes
+
+# Step 4: Start the service as the runner user
+- name: Start GitHub Runner service (as runner user)
+  ansible.builtin.shell: |
+    ./svc.sh start
+  args:
+    chdir: "{{ runner_dir }}"
+  become: yes
+  become_user: "{{ runner_user }}"
   ignore_errors: yes
 
 - name: Ensure runner service is enabled at boot
