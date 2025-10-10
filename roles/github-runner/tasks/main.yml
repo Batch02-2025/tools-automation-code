@@ -75,7 +75,7 @@
   ansible.builtin.shell:
     cmd: >
       ./config.sh
-      --url https://github.com/Batch02-2025/tools-automation-code
+      --url https://github.com/Batch02-2025/
       --token {{ token.stdout }}
       --runnergroup Default
       --name myrunner
