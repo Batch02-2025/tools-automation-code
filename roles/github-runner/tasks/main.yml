@@ -75,7 +75,7 @@
   ansible.builtin.shell:
     cmd: >
       ./config.sh
-      --url https://github.com/Batch02-2025/
+      --url https://github.com/Batch02-2025/tools-automation-code
       --token {{ token.stdout }}
       --runnergroup Default
       --name myrunner
@@ -103,6 +103,7 @@
   become_user: grunner
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
+
 - name: Install Github Service
   ansible.builtin.shell: ./svc.sh install; ./svc.sh start
   args:
@@ -110,6 +111,19 @@
   become: true
   become_user: root
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
+
+- name: Ensure runner service runs as grunner
+  ansible.builtin.replace:
+    path: /etc/systemd/system/actions.runner.Batch02-2025-tools-automation-code.myrunner.service
+    regexp: '^User=.*'
+    replace: 'User=grunner'
+  become: true
+
+- name: Reload systemd and restart runner
+  ansible.builtin.shell: |
+    systemctl daemon-reload
+    systemctl restart actions.runner.Batch02-2025-tools-automation-code.myrunner.service
+  become: true
 
 - name: Download the Terraform Repo File
   ansible.builtin.get_url:
