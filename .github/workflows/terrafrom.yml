@@ -8,6 +8,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Install the latest Terraform version
+      - name: Install Terraform (latest)
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false   # optional, for raw CLI output
+
       - name: Terraform Init
         run: terraform init
 
