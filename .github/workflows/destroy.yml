@@ -2,7 +2,7 @@ name: Removal of Tool Infra
 on:
   workflow_dispatch:
 jobs:
-  provision:
+  Destroying:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
