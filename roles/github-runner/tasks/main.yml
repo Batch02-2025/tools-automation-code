@@ -7,8 +7,6 @@
 #   ansible.builtin.hostname:
 #     name: github-runner
 
-
-
 - name: Add github Runner User
   ansible.builtin.user:
     name: grunner
