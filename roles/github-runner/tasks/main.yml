@@ -107,13 +107,22 @@
 
 
 - name: Install Github Service
-  ansible.builtin.shell:
-    ./svc.sh install grunner
-    ./svc.sh start
-  args:
-    chdir: /actions-runner
+  ansible.builtin.copy:
+    src: github-actions-runner.service
+    dest: /etc/systemd/system/github-actions-runner.service
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
+- name: Start GitHub Actions self-hosted runner
+  ansible.builtin.service:
+    name: github-actions-runner.service
+    state: started
+    enabled: yes
+    daemon_reload: true
+  become: true
 
 - name: Download the Terraform Repo File
   ansible.builtin.get_url:
