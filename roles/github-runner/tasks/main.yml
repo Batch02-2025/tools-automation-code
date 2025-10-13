@@ -80,7 +80,7 @@
       --url https://github.com/Batch02-2025/tools-automation-code
       --token {{ token.stdout }}
       --runnergroup Default
-      --name myrunner
+      --name myrunner1
       --labels rhel
       --work _work
       --replace
@@ -106,39 +106,14 @@
   when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
 
-#- name: Install Github Service
-#  ansible.builtin.shell:
-#    ./svc.sh install grunner
-#    ./svc.sh start
-#  args:
-#    chdir: /actions-runner
-#  when: runner_count.stdout == "0" or runner_status.stdout == "offline"
-
-- name: Install the runner as a systemd service
-  command: "{{ runner_dir }}/svc.sh install"
+- name: Install Github Service
+  ansible.builtin.shell:
+    ./svc.sh install grunner
+    ./svc.sh start
   args:
-    chdir: "{{ runner_dir }}"
-  become_user: "{{ runner_user }}"
+    chdir: /actions-runner
+  when: runner_count.stdout == "0" or runner_status.stdout == "offline"
 
-- name: Start and enable the runner service
-  systemd:
-    name: "actions.runner.{{ inventory_hostname }}.service" # Adjust service name as needed
-    state: started
-    enabled: yes
-  become_user: "{{ runner_user }}" # Systemd management might require root or specific permissions
-
-#- name: Ensure runner service runs as grunner
-#  ansible.builtin.replace:
-#    path: /etc/systemd/system/actions.runner.Batch02-2025-tools-automation-code.myrunner.service
-#    regexp: '^User=.*'
-#    replace: 'User=grunner'
-#  become: true
-#
-#- name: Reload systemd and restart runner
-#  ansible.builtin.shell: |
-#    systemctl daemon-reload
-#    systemctl restart actions.runner.Batch02-2025-tools-automation-code.myrunner.service
-#  become: true
 
 - name: Download the Terraform Repo File
   ansible.builtin.get_url:
@@ -162,3 +137,33 @@
 
 
 
+
+
+
+
+
+#- name: Install the runner as a systemd service
+#  command: "{{ runner_dir }}/svc.sh install"
+#  args:
+#    chdir: "{{ runner_dir }}"
+#  become_user: "{{ runner_user }}"
+#
+#- name: Start and enable the runner service
+#  systemd:
+#    name: "actions.runner.{{ inventory_hostname }}.service" # Adjust service name as needed
+#    state: started
+#    enabled: yes
+#  become_user: "{{ runner_user }}" # Systemd management might require root or specific permissions
+
+#- name: Ensure runner service runs as grunner
+#  ansible.builtin.replace:
+#    path: /etc/systemd/system/actions.runner.Batch02-2025-tools-automation-code.myrunner.service
+#    regexp: '^User=.*'
+#    replace: 'User=grunner'
+#  become: true
+#
+#- name: Reload systemd and restart runner
+#  ansible.builtin.shell: |
+#    systemctl daemon-reload
+#    systemctl restart actions.runner.Batch02-2025-tools-automation-code.myrunner.service
+#  become: true
