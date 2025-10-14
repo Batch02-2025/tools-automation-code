@@ -1,0 +1,91 @@
+# DNF Plugins
+- name: Ensure DNF plugins and basic tools are installed
+  dnf:
+    name:
+      - dnf-plugins-core
+      - yum-utils
+      - unzip
+      - curl
+      - wget
+    state: present
+
+
+# ----------------------------------------------------------
+# GitHub CLI
+# ----------------------------------------------------------
+- name: Add GitHub CLI repo
+  command: >
+    dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+  args:
+    creates: /etc/yum.repos.d/gh-cli.repo
+
+- name: Install GitHub CLI
+  dnf:
+    name: gh
+    state: present
+
+# ----------------------------------------------------------
+# Terraform
+# ----------------------------------------------------------
+- name: Add HashiCorp repo
+  command: >
+    dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+  args:
+    creates: /etc/yum.repos.d/hashicorp.repo
+
+- name: Install Terraform
+  dnf:
+    name: terraform
+    state: present
+
+# ----------------------------------------------------------
+# AWS CLI
+# ----------------------------------------------------------
+- name: Download AWS CLI zip
+  get_url:
+    url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+    dest: /tmp/awscliv2.zip
+    mode: '0644'
+
+- name: Unzip AWS CLI installer
+  unarchive:
+    src: /tmp/awscliv2.zip
+    dest: /tmp/
+    remote_src: yes
+
+- name: Install AWS CLI
+  command: ./aws/install
+  args:
+    chdir: /tmp
+    creates: /usr/local/bin/aws
+
+# ----------------------------------------------------------
+# Ansible
+# ----------------------------------------------------------
+- name: Install python3.11-pip
+  ansible.builtin.yum:
+    name: python3.11-pip
+    state: present
+
+- name: Install Ansible using pip3.11
+  ansible.builtin.pip:
+    name: ansible
+    executable: pip3.11
+
+
+# ----------------------------------------------------------
+# Disable SELinux
+# ----------------------------------------------------------
+- name: Set SELinux to permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+# ----------------------------------------------------------
+# Reboot after setup
+# ----------------------------------------------------------
+- name: Reboot the system
+  reboot:
+    msg: "Rebooting after setup..."
+    connect_timeout: 5
+    reboot_timeout: 600

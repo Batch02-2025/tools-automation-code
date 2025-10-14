@@ -1,0 +1,141 @@
+# ----------------------------------------------------------
+# Docker & Podman
+# ----------------------------------------------------------
+- name: Add Docker CE repo
+  command: >
+    dnf config-manager --add-repo=https://download.docker.com/linux/rhel/docker-ce.repo
+  args:
+    creates: /etc/yum.repos.d/docker-ce.repo
+
+- name: Install Docker and Podman
+  dnf:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - podman
+      - buildah
+    state: present
+
+- name: Enable and start Docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: Add user to Docker group
+  user:
+    name: "{{ user_name }}"
+    groups: docker
+    append: yes
+
+
+# ----------------------------------------------------------
+# Java (Optional)
+# ----------------------------------------------------------
+- name: Install Java (OpenJDK 17)
+  dnf:
+    name:
+      - java-17-openjdk
+      - java-17-openjdk-devel
+    state: present
+
+# ----------------------------------------------------------
+# NodeJS (Optional)
+# ----------------------------------------------------------
+- name: Enable NodeJS module stream
+  command: "dnf module install nodejs:{{ nodejs_stream }} -y"
+  args:
+    creates: "/usr/bin/node"
+
+- name: Verify Node installation
+  command: node --version
+  register: node_version
+  ignore_errors: yes
+
+- debug:
+    msg: "NodeJS version installed: {{ node_version.stdout }}"
+
+# ----------------------------------------------------------
+# Jenkins (Optional)
+# ----------------------------------------------------------
+- name: Add Jenkins repo
+  get_url:
+    url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Import Jenkins GPG key
+  rpm_key:
+    key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+    state: present
+
+- name: Install Jenkins and Java 21
+  dnf:
+    name:
+      - openjdk-21-jdk
+      - jenkins
+    state: present
+
+- name: Enable and start Jenkins
+  systemd:
+    name: jenkins
+    enabled: yes
+    state: started
+
+# ----------------------------------------------------------
+# System Monitoring Tools
+# ----------------------------------------------------------
+- name: Install monitoring tools
+  dnf:
+    name:
+      - sysstat
+      - iotop
+      - glances
+    state: present
+
+# ----------------------------------------------------------
+# Kubernetes CLI (kubectl)
+# ----------------------------------------------------------
+- name: Download kubectl binary
+  get_url:
+    url: "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    dest: /usr/local/bin/kubectl
+    mode: '0755'
+
+- name: Verify kubectl installation
+  command: kubectl version --client
+  register: kubectl_version
+  ignore_errors: yes
+
+- debug:
+    msg: "Kubectl version: {{ kubectl_version.stdout }}"
+
+# ----------------------------------------------------------
+# Kubernetes Repo + kubelet/kubeadm
+# ----------------------------------------------------------
+- name: Configure Kubernetes repo
+  copy:
+    dest: /etc/yum.repos.d/kubernetes.repo
+    content: |
+      [kubernetes]
+      name=Kubernetes
+      baseurl=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key
+      exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+
+- name: Install Kubernetes components
+  dnf:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+    disable_excludes: kubernetes
+
+- name: Enable and start kubelet
+  systemd:
+    name: kubelet
+    enabled: yes
+    state: started

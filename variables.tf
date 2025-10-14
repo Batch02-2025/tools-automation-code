@@ -1,15 +1,25 @@
 variable "tools" {
   default = {
-
     workstation = {
       instance_type = "t3.medium"
-      policy_name = ["AdministratorAccess"]
-      ports         = {
-        ssh = 22
+      ports = {
+        ssh  = 22
         http = 80
         https = 443
       }
-      volume_size   = 30
+      volume_size = 30
+      policy_name = [
+        # Define multiple policy objects here
+        {
+          name = "AdministratorAccess"
+          arn  = "arn:aws:iam::aws:policy/AdministratorAccess"
+        },
+        {
+          name = "AmazonS3FullAccess"
+          arn  = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+        },
+        # Add more policies as needed
+      ]
     }
     github-runner = {
       instance_type = "t3.small"
@@ -26,7 +36,7 @@ variable "tools" {
       }
       volume_size  = 20
     }
- }
+  }
 }
 
 variable "key_name" {

@@ -6,31 +6,9 @@ resource "aws_instance" "tool" {
   iam_instance_profile    = aws_iam_instance_profile.instance-profile.name
   key_name                = data.aws_key_pair.key.key_name
 
-  user_data = <<-EOF
-    #! /bin/bash
-
-    # Update the System
-    sudo dnf update -y
-    sudo dnf upgrade -y
-    sudo hostnamectl set-hostname ${var.name} --static
-
-    # Download the latest EPEL release RPM for RHEL 9
-    sudo curl -O https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
-
-    # Install it manually
-    sudo rpm -ivh epel-release-latest-9.noarch.rpm
-
-    # Clean and refresh DNF
-    sudo dnf clean all
-    sudo dnf makecache
-
-    #  Install Basic Utilities
-
-    sudo dnf install vim wget git unzip net-tools bind-utils telnet traceroute nmap htop tree bash-completion iputils python3.11-pip -y
-
-    # Security & Networking Tools
-    sudo dnf install -y tcpdump openssl openssh-clients
-  EOF
+  user_data = base64encode(templatefile("${path.module}/userdata.sh", {
+   role_name = var.name
+  }))
 
   tags = {
     Name = "${var.name}"

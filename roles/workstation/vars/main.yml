@@ -1,0 +1,74 @@
+---
+# =========================================================
+# DevOps Workstation Setup Variables
+# =========================================================
+
+# --- General System Settings ---
+user_name: ec2-user             # Replace with your local or target system username
+reboot_after_install: true      # Toggle if you want to reboot automatically at the end
+
+# --- NodeJS Configuration ---
+nodejs_stream: "18"             # Available streams: 16, 18, 20 etc.
+
+# --- Package Versions & URLs ---
+aws_cli_zip_url: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+docker_repo_url: "https://download.docker.com/linux/rhel/docker-ce.repo"
+gh_cli_repo_url: "https://cli.github.com/packages/rpm/gh-cli.repo"
+hashicorp_repo_url: "https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo"
+jenkins_repo_url: "https://pkg.jenkins.io/redhat-stable/jenkins.repo"
+jenkins_gpg_key: "https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key"
+
+# --- Kubernetes Config ---
+kubernetes_repo_path: "/etc/yum.repos.d/kubernetes.repo"
+kubernetes_repo_content: |
+  [kubernetes]
+  name=Kubernetes
+  baseurl=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/
+  enabled=1
+  gpgcheck=1
+  gpgkey=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key
+  exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+
+# --- Default Packages ---
+common_packages:
+  - dnf-plugins-core
+  - yum-utils
+  - unzip
+  - curl
+  - wget
+
+python_packages:
+  - python3
+  - python3-pip
+  - python3-devel
+
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - podman
+  - buildah
+
+monitoring_packages:
+  - sysstat
+  - iotop
+  - glances
+
+java_packages:
+  - java-17-openjdk
+  - java-17-openjdk-devel
+
+jenkins_packages:
+  - openjdk-21-jdk
+  - jenkins
+
+kubernetes_packages:
+  - kubelet
+  - kubeadm
+  - kubectl
+
+# --- SELinux Mode ---
+selinux_state: permissive
+
+# --- Debug & Verbosity ---
+show_versions: true             # Toggle for displaying Node, AWS CLI, and Kubectl versions
