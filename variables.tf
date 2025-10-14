@@ -1,10 +1,21 @@
 variable "tools" {
   default = {
 
+    workstation = {
+      instance_type = "t3.medium"
+      policy_name = ["AdministratorAccess"]
+      ports         = {
+        ssh = 22
+        http = 80
+        https = 443
+      }
+      volume_size   = 30
+    }
     github-runner = {
       instance_type = "t2.small"
       policy_name = ["AdministratorAccess"]
-      ports         = {}
+      ports         = {
+      }
       volume_size   = 30
     }
     vault = {
